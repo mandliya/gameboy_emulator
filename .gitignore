@@ -1,0 +1,7 @@
+/build/
+/tags
+/.vscode/
+
+# remove any pdfs
+*.pdf
+
