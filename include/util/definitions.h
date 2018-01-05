@@ -25,24 +25,35 @@ const int GAMEBOY_HEIGHT = 144;
 const int CLOCK_RATE = 4194304;
 
 enum class GBColor {
-    Color0,     /* White */
-    Color1,     /* Light Gray */
-    Color2,     /* Dark Gray */
-    Color3,     /* Black */
+    Color0,     /* Alpha */
+    Color1,     /* Red */
+    Color2,     /* Green */
+    Color3,     /* Blue */
 };
 
 enum class Color {
-    White,
-    LightGray,
-    DarkGray,
-    Black,
+    Alpha,
+    Red,
+    Green,
+    Blue,
 };
 
 struct BGPalette {
-    Color color0 = Color::White;
-    Color color1 = Color::LightGray;
-    Color color2 = Color::DarkGray;
-    Color color3 = Color::Black;
+    Color color0 = Color::Alpha;
+    Color color1 = Color::Red;
+    Color color2 = Color::Green;
+    Color color3 = Color::Blue;
+};
+
+enum class GBKeys {
+    Right_key = 0,
+    Left_key = 1,
+    Up_key = 2,
+    Down_key = 3,
+    A_key = 4,
+    B_key = 5,
+    Select_key = 6,
+    Start_key = 7
 };
 
 class Cycles {
