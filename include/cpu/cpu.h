@@ -5,5 +5,5 @@
 
 class CPU {
 public:
-    ByteRegister interrupt_register;
+    ByteRegister interrupt_enable_reg;
 };
