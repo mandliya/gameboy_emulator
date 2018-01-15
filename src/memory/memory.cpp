@@ -142,8 +142,139 @@ void Memory::write(const Address& address, const u8 byte)
     fatal_error("Attempted to write to unmapped memory address 0x%X", address.value());
 }
 
+u8 Memory::read_io(const Address& address)
+{
+    switch(address.value()) {
+        // Joypad register
+        case 0xFF00:
+            // TODO
+            return 0xFF;
+
+        // Serial transfer data
+        case 0xFF01:
+            // TODO
+            return 0xFF;
+
+        // Serial transfer control 
+        case 0xFF02:
+            // TODO
+            return 0xFF;
+
+        // Interrupt flag register
+        case 0xFF0F:
+            return m_cpu.get_interrupt_flag();
+        
+        // Control byte;
+        case 0xFF40:
+            return m_video.get_control_byte();
+        
+        // LCD stat register
+        case 0xFF41:
+            // TODO
+            return 0xFF;
+
+        // Scroll Y value
+        case 0xFF42:
+            return m_video.get_scroll_y();
+
+        // Current scan line number in register LY
+        case 0xFF44:
+            return m_video.get_line_y();
+
+        // Prepare speed switch register
+        case 0xFF4D:
+            // TODO
+            return 0x0;
+
+        // Disable boot rom switch register
+        case 0xFF50:
+            return memory_read(address);
+
+        default:
+            log_error("Read from an unknown IO address 0x%X", address.value());
+            exit(1);
+    }
+}
+
 void Memory::write_io(const Address& address, const u8 byte)
 {
+    switch(address.value()) {
 
+        // Joypad
+        case 0xFF00:
+            // TODO
+            return;
+
+        // serial transfer data
+        case 0xFF01:
+            // TODO
+            return;
+
+        // Serial tranfer data
+        case 0xFF02:
+            // TODO
+            return;
+
+        // Time Control
+        case 0xFF07:
+            // TODO
+            return;
+
+        // CPU interrupt flag set
+        case 0xFF0F:
+            m_cpu.set_interrupt_flag(byte);
+            return;
+
+        // Audio channel 1 : Tone and sweep
+        case 0xFF10:
+        case 0xFF11:
+        case 0xFF12:
+        case 0xFF13:
+        case 0xFF14:
+            // TODO
+            return;
+
+        // Audio channel 2: Tone
+        case 0xFF16:
+        case 0xFF17:
+        case 0xFF18:
+        case 0xFF19:
+            // TODO
+            return;
+
+        // Audio channel 3: Wave output
+        case 0xFF1A:
+        case 0xFF1B:
+        case 0xFF1C:
+        case 0xFF1D:
+        case 0xFF1E:
+            // TODO
+            return;
+
+        // Audio channel 4: Noise
+        case 0xFF20:
+        case 0xFF21:
+        case 0xFF22:
+        case 0xFF23:
+            // TODO 
+            return;
+
+        // Audio sound control registers
+        case 0xFF24:
+            // TODO
+            // Write to channel control address
+            return;
+        
+        case 0xFF25:
+            // TODO
+            // Write to selection of sound output (Not sure)
+            return;
+        
+        case 0xFF26:
+            // TODO
+            return;
+
+        // More needs to be added.
+    }
 }
 
