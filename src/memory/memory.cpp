@@ -15,7 +15,7 @@ Memory::Memory(Cartridge& cartridge, CPU& cpu, Video& video):
 bool Memory::is_boot_rom_active() const
 {
     /* Writing the value of 1 to the address 0xFF50 unmaps the boot ROM */
-    return read(0xFF50) != 0x01;
+    return read(0xFF50) != 0x1;
 }
 
 u8 Memory::memory_read(const Address& address)
@@ -148,16 +148,21 @@ u8 Memory::read_io(const Address& address)
         // Joypad register
         case 0xFF00:
             // TODO
+            log_unimplemented("Attempt to read from joypad register 0x%x", address.value());
             return 0xFF;
 
         // Serial transfer data
         case 0xFF01:
             // TODO
+            log_unimplemented("Attempt to read from serial transfer data register 0x%x",
+                address.value());
             return 0xFF;
 
         // Serial transfer control 
         case 0xFF02:
             // TODO
+            log_unimplemented("Attempt to read from serial transfer control register 0x%x",
+                address.value());
             return 0xFF;
 
         // Interrupt flag register
@@ -171,6 +176,8 @@ u8 Memory::read_io(const Address& address)
         // LCD stat register
         case 0xFF41:
             // TODO
+            log_unimplemented("Attempt to read from LCD stat register 0x%x",
+                address.value());
             return 0xFF;
 
         // Scroll Y value
@@ -184,6 +191,7 @@ u8 Memory::read_io(const Address& address)
         // Prepare speed switch register
         case 0xFF4D:
             // TODO
+            log_unimplemented("Attempt to read from speed switch register 0x%x", address.value());
             return 0x0;
 
         // Disable boot rom switch register
@@ -203,21 +211,29 @@ void Memory::write_io(const Address& address, const u8 byte)
         // Joypad
         case 0xFF00:
             // TODO
+            log_unimplemented("Attempt to write to joypad register 0x%x - 0x%x",
+                address.value(), byte);
             return;
 
         // serial transfer data
         case 0xFF01:
             // TODO
+            log_unimplemented("Attempt to write to serial transfer data register 0x%x - 0x%x",
+                address.value(), byte);
             return;
 
         // Serial tranfer data
         case 0xFF02:
             // TODO
+            log_unimplemented("Attempt to write to Serial tranfer data register 0x%x - 0x%x",
+                address.value(), byte);
             return;
 
         // Time Control
         case 0xFF07:
             // TODO
+            log_unimplemented("Attempt to write to Time Control register 0x%x - 0x%x",
+                address.value(), byte);
             return;
 
         // CPU interrupt flag set
@@ -232,6 +248,9 @@ void Memory::write_io(const Address& address, const u8 byte)
         case 0xFF13:
         case 0xFF14:
             // TODO
+            log_unimplemented(
+                "Attempt to write to Audio channel 1 : Tone and sweep register 0x%x - 0x%x",
+                address.value(), byte);
             return;
 
         // Audio channel 2: Tone
@@ -240,6 +259,9 @@ void Memory::write_io(const Address& address, const u8 byte)
         case 0xFF18:
         case 0xFF19:
             // TODO
+            log_unimplemented(
+                "Attempt to write to Audio channel 2: Tone register 0x%x - 0x%x",
+                address.value(), byte);
             return;
 
         // Audio channel 3: Wave output
@@ -249,6 +271,9 @@ void Memory::write_io(const Address& address, const u8 byte)
         case 0xFF1D:
         case 0xFF1E:
             // TODO
+            log_unimplemented(
+                "Attempt to write to Audio channel 3: Wave output register 0x%x - 0x%x",
+                address.value(), byte);
             return;
 
         // Audio channel 4: Noise
@@ -257,24 +282,115 @@ void Memory::write_io(const Address& address, const u8 byte)
         case 0xFF22:
         case 0xFF23:
             // TODO 
+            log_unimplemented(
+                "Attempt to write to Audio channel 4: Noise register 0x%x - 0x%x",
+                address.value(), byte);
             return;
 
         // Audio sound control registers
         case 0xFF24:
             // TODO
             // Write to channel control address
+            log_unimplemented(
+                "Attempt to write to Audio channel control register 0x%x - 0x%x",
+                address.value(), byte);
             return;
         
         case 0xFF25:
             // TODO
             // Write to selection of sound output (Not sure)
+            log_unimplemented(
+                "Attempt to write to selection of sound output terminal address register 0x%x - 0x%x",
+                address.value(), byte);
             return;
         
         case 0xFF26:
             // TODO
+            log_unimplemented(
+                "Attempt to write to sound on/off address register 0x%x - 0x%x",
+                address.value(), byte);
             return;
 
-        // More needs to be added.
+        // TODO audio - Wave pattern RAM.
+        case 0xFF30:
+        case 0xFF31:
+        case 0xFF32:
+        case 0xFF33:
+        case 0xFF34:
+        case 0xFF35:
+        case 0xFF36:
+        case 0xFF37:
+        case 0xFF38:
+        case 0xFF39:
+        case 0xFF3A:
+        case 0xFF3B:
+        case 0xFF3C:
+        case 0xFF3D:
+        case 0xFF3E:
+        case 0xFF3F:
+            memory_write(address, byte);
+            return;
+
+        // Turn on LCD
+        case 0xFF40:
+            m_video.set_control_byte(byte);
+            return;
+        
+        // LCD stat register
+        case 0xFF41:
+            // TODO
+            log_unimplemented("Attemp to write to LCD stat register 0x%x - 0x%x",
+                address.value(), byte);
+            return;
+
+        // Vertical scroll register
+        case 0xFF42:
+            m_video.set_scroll_y(byte);
+            return;
+        
+        // horizontal scroll register
+        case 0xFF43:
+            m_video.set_scroll_x(byte);
+            return;
+
+        // LY - Line Y coordinate
+        case 0xFF44:
+            log_unimplemented("Writing to FF44 will reset the line counter");
+            return;
+        
+        // Background palette
+        case 0xFF47:
+            m_video.set_bg_palette(byte);
+            log_trace("Set video palette: 0x%x", byte);
+            return;
+        
+        // TODO object palette
+        case 0xFF48:
+        case 0xFF49:
+             log_unimplemented(
+                "Attempt to write to object palette register 0x%x - 0x%x",
+                address.value(), byte);
+            return;
+
+        // TODO prepare speed reg
+        case 0xFF4D:
+            log_unimplemented(
+                "Attempt to write to prepare speed register 0x%x - 0x%x",
+                address.value(), byte);
+            return;
+        
+        // Disable memory switch register
+        case 0xFF50:
+            memory_write(address, byte);
+            global_logger.enable_tracing();
+            log_info("BOOT ROM was disabled");
+            return;
+        
+        default:
+            // TODO
+            log_unimplemented("Attempt to write to unknown register 0x%x - 0x%x",
+                address.value(), byte);
+            break;
     }
 }
 
